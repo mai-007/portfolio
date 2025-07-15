@@ -3,8 +3,6 @@ import {
   getAllPosts,
   getAllCategories,
   getAllSkills,
-  getProfileData,
-  getPdfSections,
   checkApiAvailability,
   debugEnvironmentVariables // 追加: デバッグ関数をインポート
 } from '@/lib/api';
@@ -31,12 +29,10 @@ export async function GET() {
     }
 
     // すべてのデータを並行してフェッチ
-    const [worksData, categoriesData, skillsData, profileDataRes, pdfSectionsData] = await Promise.all([
+    const [worksData, categoriesData, skillsData] = await Promise.all([
       getAllPosts(),
       getAllCategories(),
       getAllSkills(),
-      getProfileData(),
-      getPdfSections(),
     ]);
 
     // 取得したデータをJSONレスポンスとして返す
@@ -44,8 +40,6 @@ export async function GET() {
       works: worksData,
       categories: categoriesData,
       skills: skillsData,
-      profileData: profileDataRes,
-      pdfSections: pdfSectionsData,
       apiStatus: { available: true, message: "MicroCMS API is configured and ready" } // 成功時はAPIステータスも返す
     });
 

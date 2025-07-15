@@ -6,7 +6,6 @@ import {
   type Category,
   type Skill,
   type ProfileData,
-  type PdfSection,
 } from "@/lib/api"
 
 // API Routeから返されるデータの型を定義
@@ -14,8 +13,6 @@ interface ApiData {
   works: Work[]
   categories: Category[]
   skills: Skill[]
-  profileData: ProfileData | null
-  pdfSections: PdfSection[]
   apiStatus: { available: boolean; message: string }
 }
 
@@ -23,8 +20,7 @@ export const usePortfolioData = () => {
   const [works, setWorks] = useState<Work[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [skills, setSkills] = useState<Skill[]>([])
-  const [profileData, setProfileData] = useState<ProfileData | null>(null)
-  const [pdfSections, setPdfSections] = useState<PdfSection[]>([]) // PDFセクションデータ
+  
   const [uniqueDates, setUniqueDates] = useState<string[]>([]) // ユニークな制作日
   const [loading, setLoading] = useState(true) // ローディング状態
   const [apiStatus, setApiStatus] = useState<{
@@ -51,16 +47,12 @@ export const usePortfolioData = () => {
           setWorks([])
           setCategories([])
           setSkills([])
-          setProfileData(null)
-          setPdfSections([])
         } else {
           const fetchedData = data as ApiData
           setApiStatus(fetchedData.apiStatus)
           setWorks(fetchedData.works)
           setCategories(fetchedData.categories)
           setSkills(fetchedData.skills)
-          setProfileData(fetchedData.profileData)
-          setPdfSections(fetchedData.pdfSections)
 
             // ユニークな制作年を抽出してソート
             const years = fetchedData.works
@@ -76,8 +68,7 @@ export const usePortfolioData = () => {
             works: fetchedData.works.length,
             categories: fetchedData.categories.length,
             skills: fetchedData.skills.length,
-            profile: fetchedData.profileData ? "取得成功" : "取得失敗",
-            pdfSections: fetchedData.pdfSections.length,
+            
           })
         }
         await minLoadingTime
@@ -92,8 +83,7 @@ export const usePortfolioData = () => {
         setWorks([])
         setCategories([])
         setSkills([])
-        setProfileData(null)
-        setPdfSections([])
+        
       } finally {
         setLoading(false)
       }
@@ -106,8 +96,7 @@ export const usePortfolioData = () => {
     works,
     categories,
     skills,
-    profileData,
-    pdfSections,
+    
     loading,
     apiStatus,
     uniqueDates,

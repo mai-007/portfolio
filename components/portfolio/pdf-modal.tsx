@@ -9,10 +9,7 @@ interface PdfModalProps {
 
 export const PdfModal = ({ pdfUrl, onOpenChange }: PdfModalProps) => (
   <Dialog open={!!pdfUrl} onOpenChange={onOpenChange}>
-    <DialogContent className="max-w-4xl w-full h-[80vh]">
-      <DialogHeader>
-        <DialogTitle>PDF Viewer</DialogTitle>
-      </DialogHeader>
+    <DialogContent className="w-[90vw] h-[90vh] max-w-none sm:max-w-none p-0" showCloseButton={false}>
       {pdfUrl && (
         <div className="flex-1 w-full h-full">
           <iframe src={pdfUrl} className="w-full h-full border-0 rounded-lg" title="PDF Viewer" />

@@ -1,14 +1,13 @@
-// tailwind.config.ts
-import type { Config } from "tailwindcss";
-import tailwindcssAnimate from "tailwindcss-animate"; // ✨ この行を追加！
+import type { Config } from "tailwindcss"
 
-const config: Config = {
+const config = {
+  darkMode: ["class"],
   content: [
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/**/*.{ts,tsx}",
-    "*.{js,ts,jsx,tsx,mdx}",
-  ],
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
+	],
   prefix: "",
   theme: {
     container: {
@@ -19,6 +18,16 @@ const config: Config = {
       },
     },
     extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            iframe: {
+              width: '100%',
+              height: '400px', // 必要に応じて調整
+            },
+          },
+        },
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -75,10 +84,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [
-    tailwindcssAnimate,
-    require('@tailwindcss/typography'),
-  ],
-} satisfies Config;
+  plugins: [require("tailwindcss-animate"), require('@tailwindcss/typography')],
+} satisfies Config
 
-export default config;
+export default config

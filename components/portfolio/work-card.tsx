@@ -1,19 +1,20 @@
 'use client'
 
 import Image from "next/image"
-import Link from "next/link"
 import { type Work } from "@/lib/api"
 
 interface WorkCardProps {
   work: Work
   index: number
+  onWorkSelect: (workId: string) => void
 }
 
-export const WorkCard = ({ work, index }: WorkCardProps) => (
-  <Link
-    href={`/work/${work.id}`}
+export const WorkCard = ({ work, index, onWorkSelect }: WorkCardProps) => (
+  <div
+    key={work.id}
     className="group block bg-gray-100 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer animate-fade-in-up"
     style={{ animationDelay: `${index * 100}ms` }}
+    onClick={() => onWorkSelect(work.id)}
   >
     <div className="aspect-[4/3] bg-gray-200 flex items-center justify-center overflow-hidden">
       <Image
@@ -36,5 +37,5 @@ export const WorkCard = ({ work, index }: WorkCardProps) => (
         ))}
       </div>
     </div>
-  </Link>
+  </div>
 )

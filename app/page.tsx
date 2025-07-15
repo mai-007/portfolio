@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { usePortfolioData } from "@/lib/hooks/use-portfolio-data"
+import { staticProfileData } from "@/lib/static-profile-data"
 import { PortfolioPageSkeleton } from "@/components/portfolio-skeleton"
 import { ApiError } from "@/components/portfolio/api-error"
 import { CategoryTabs } from "@/components/portfolio/category-tabs"
@@ -9,24 +10,33 @@ import { WorksGrid } from "@/components/portfolio/works-grid"
 import { ProfileSection } from "@/components/portfolio/profile-section"
 import { SkillsSection } from "@/components/portfolio/skills-section"
 import { PdfSections } from "@/components/portfolio/pdf-sections"
-import { PdfModal } from "@/components/portfolio/pdf-modal"
+import { WorkDetailModal } from "@/components/portfolio/work-detail-modal"
 import { DateFilterSelect } from "@/components/portfolio/date-filter-select"
+import { PdfModal } from "@/components/portfolio/pdf-modal"
 
 export default function PortfolioPage() {
   const {
     works,
     categories,
     skills,
-    profileData,
-    pdfSections,
     loading,
     apiStatus,
     uniqueDates,
   } = usePortfolioData()
 
   const [activeCategory, setActiveCategory] = useState("ALL")
-  const [selectedPdf, setSelectedPdf] = useState<string | null>(null)
+  const [selectedPdf, setSelectedPdf] = useState<string | null>(null) // PDFモーダル用
   const [selectedDate, setSelectedDate] = useState("ALL")
+  const [selectedWork, setSelectedWork] = useState<Work | null>(null)
+
+  const handleWorkSelect = (workId: string) => {
+    const work = works.find(w => w.id === workId) ?? null;
+    setSelectedWork(work);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedWork(null);
+  };
 
   const filteredWorks = works.filter((work) => {
     const matchesCategory = activeCategory === "ALL"
@@ -66,17 +76,19 @@ export default function PortfolioPage() {
               activeCategory={activeCategory}
               onCategoryChange={setActiveCategory}
             />
-            <WorksGrid works={filteredWorks} />
+            <WorksGrid works={filteredWorks} onWorkSelect={handleWorkSelect} />
           </section>
 
           <aside className="w-80 space-y-8">
-            <ProfileSection profileData={profileData} />
-            <PdfSections pdfSections={pdfSections} onPdfOpen={setSelectedPdf} />
+            <ProfileSection profileData={staticProfileData} />
+            <PdfSections onPdfOpen={setSelectedPdf} />
             <SkillsSection skills={skills} />
           </aside>
         </section>
       </main>
 
+      <WorkDetailModal work={selectedWork} onClose={handleCloseModal} />
+      {/* PDFモーダルはそのまま残します */}
       <PdfModal pdfUrl={selectedPdf} onOpenChange={() => setSelectedPdf(null)} />
     </div>
   )

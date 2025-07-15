@@ -16,13 +16,8 @@ export interface Work {
     url: string
     height: number
     width: number
-  }
+  }[]
   eyecatch?: {
-    url: string
-    height: number
-    width: number
-  }
-  spimage?: {
     url: string
     height: number
     width: number
@@ -150,7 +145,11 @@ const isApiAvailable = () => {
       // microCMS APIから作品データを取得（スラッグでフィルタリング）
       const res = await client.get({
         endpoint: "works", // 作品エンドポイント
-        queries: { filters: `slug[equals]${slug}` }, // スラッグが一致するデータを検索
+        queries: {
+          filters: `slug[equals]${slug}`,
+          fields: "id,title,slug,content,date,github,githubUrl,figma,figmaURL,spimage,eyecatch,url,roles,categories,publishDate,createdAt,updatedAt",
+        }, // スラッグが一致するデータを検索
+        customRequestInit: { cache: 'no-store' },
       })
       return res.contents?.[0] || null // 最初の結果を返す（見つからない場合はnull）
     } catch (err) {
@@ -159,27 +158,7 @@ const isApiAvailable = () => {
     }
   }
 
-  // 作品データを1件取得する関数（IDで検索）
-  export async function getWorkById(id: string): Promise<Work | null> {
-    try {
-      if (!isApiAvailable()) {
-        console.warn("microCMS API not available, returning null");
-        return null;
-      }
-      const client = getClient();
-      const res = await client.get({
-        endpoint: "works",
-        contentId: id,
-        queries: {
-          fields: "id,title,slug,content,date,github,githubUrl,figma,figmaURL,spimage,eyecatch,url,roles,categories,publishDate,createdAt,updatedAt",
-        },
-      });
-      return res || null;
-    } catch (err) {
-      console.error("~~ getWorkById ~~", err);
-      return null;
-    }
-  }
+  
 
   // 全作品のスラッグ一覧を取得する関数
   export async function getAllSlugs(limit = 100): Promise<Work[]> {
@@ -199,6 +178,7 @@ const isApiAvailable = () => {
           orders: "-publishDate", // 公開日の降順でソート
           limit, // 取得件数の上限
         },
+        customRequestInit: { cache: 'no-store' },
       })
       return res.contents || [] // 結果を返す（取得失敗時は空配列）
     } catch (err) {
@@ -222,6 +202,7 @@ const isApiAvailable = () => {
           orders: "-publishDate", // 公開日の降順でソート
           limit,
         },
+        customRequestInit: { cache: 'no-store' },
       });
       return res.contents || [];
     } catch (err) {
@@ -244,9 +225,10 @@ const isApiAvailable = () => {
       const res = await client.get({
         endpoint: "works", // 作品エンドポイント
         queries: {
-          fields: "title,slug,eyecatch,url,categories,id,date,roles", // ポートフォリオ表示に必要なフィールドにdateとrolesを追加
+          fields: "id,title,slug,eyecatch,url,categories,id,date,roles,content,github,githubUrl,figma,figmaURL,spimage,publishDate,createdAt,updatedAt", // ポートフォリオグリッド表示に必要なフィールド
           orders: "-publishDate", // 公開日の降順でソート（新しい作品が上に）
           limit, // 取得件数の上限
+          richEditorFormat: 'html', // リッチエディタの内容をHTML形式で取得
         },
       })
       return res.contents || [] // 作品データの配列を返す
@@ -333,31 +315,7 @@ const isApiAvailable = () => {
     }
   }
 
-  //プロフィール情報を取得する関数
-  export async function getProfileData(): Promise<ProfileData | null> {
-    try {
-      // API接続が利用できない場合はnullを返す
-      if (!isApiAvailable()) {
-        console.warn("microCMS API not available, returning null")
-        return null
-      }
-
-      const client = getClient()
-      // microCMS APIからプロフィールデータを取得（単一コンテンツ）
-      const res = await client.get({
-        endpoint: "profile", // プロフィールエンドポイント
-        queries: {
-          fields: "name,description,avatar,profileTags,experienceTags,id", // プロフィール表示に必要なフィールド
-        },
-      })
-      return res || null // プロフィールデータを返す（取得失敗時はnull）
-    } catch (err) {
-      console.error("~~ getProfileData ~~", err)
-      return null
-    }
-  }
-
-  //PDFセクションデータを取得する関数
+  //全スキルデータを取得する関数
   export async function getPdfSections(limit = 100): Promise<PdfSection[]> {
     try {
       // API接続が利用できない場合は空配列を返す
@@ -396,9 +354,10 @@ const isApiAvailable = () => {
       const res = await client.get({
         endpoint: "works", // 作品エンドポイント
         queries: {
-          fields: "id,title,slug,eyecatch,categories,id", // ポートフォリオグリッド表示に必要なフィールド
+          fields: "id,title,slug,eyecatch,url,categories,date,roles,content,github,githubUrl,figma,figmaURL,spimage,publishDate,createdAt,updatedAt", // ポートフォリオグリッド表示に必要なフィールド
           orders: "-publishDate", // 公開日の降順でソート（最新作品を上に表示）
           limit, // 取得件数の上限
+          richEditorFormat: 'html', // リッチエディタの内容をHTML形式で取得
         },
       })
       return res.contents || [] // 作品データの配列を返す
