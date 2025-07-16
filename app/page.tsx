@@ -13,6 +13,7 @@ import { PdfSections } from "@/components/portfolio/pdf-sections"
 import { WorkDetailModal } from "@/components/portfolio/work-detail-modal"
 import { DateFilterSelect } from "@/components/portfolio/date-filter-select"
 import { PdfModal } from "@/components/portfolio/pdf-modal"
+import { type Work } from "@/lib/api"
 
 export default function PortfolioPage() {
   const {
