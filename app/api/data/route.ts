@@ -29,7 +29,7 @@ export async function GET() {
     }
 
     // すべてのデータを並行してフェッチ
-    const [worksData, categoriesData, skillsData] = await Promise.all([
+    const [works, categories, skills] = await Promise.all([
       getAllPosts(),
       getAllCategories(),
       getAllSkills(),
@@ -37,9 +37,9 @@ export async function GET() {
 
     // 取得したデータをJSONレスポンスとして返す
     return NextResponse.json({
-      works: worksData,
-      categories: categoriesData,
-      skills: skillsData,
+      works: works,
+      categories: categories,
+      skills: skills,
       apiStatus: { available: true, message: "MicroCMS API is configured and ready" } // 成功時はAPIステータスも返す
     });
 
