@@ -149,7 +149,7 @@ const isApiAvailable = () => {
           filters: `slug[equals]${slug}`,
           fields: "id,title,slug,content,date,github,githubUrl,figma,figmaURL,spimage,eyecatch,url,roles,categories,publishDate,createdAt,updatedAt",
         }, // スラッグが一致するデータを検索
-        customRequestInit: { cache: 'no-store' },
+        customRequestInit: { next: { tags: ['works', `work-${slug}`] } },
       })
       return res.contents?.[0] || null // 最初の結果を返す（見つからない場合はnull）
     } catch (err) {
@@ -178,7 +178,7 @@ const isApiAvailable = () => {
           orders: "-publishDate", // 公開日の降順でソート
           limit, // 取得件数の上限
         },
-        customRequestInit: { cache: 'no-store' },
+        customRequestInit: { next: { tags: ['works'] } },
       })
       return res.contents || [] // 結果を返す（取得失敗時は空配列）
     } catch (err) {
@@ -202,7 +202,7 @@ const isApiAvailable = () => {
           orders: "-publishDate", // 公開日の降順でソート
           limit,
         },
-        customRequestInit: { cache: 'no-store' },
+        customRequestInit: { next: { tags: ['works'] } },
       });
       return res.contents || [];
     } catch (err) {
@@ -230,6 +230,7 @@ const isApiAvailable = () => {
           limit, // 取得件数の上限
           richEditorFormat: 'html', // リッチエディタの内容をHTML形式で取得
         },
+        customRequestInit: { next: { tags: ['works'] } },
       })
       return res.contents || [] // 作品データの配列を返す
     } catch (err) {

@@ -3,7 +3,7 @@ import { ProfileData } from "./api";
 export const staticProfileData: ProfileData = {
   id: "static-profile",
   name: "Mai",
-  description: "フロントエンドもできるプロダクトデザイナーです。",
+  description: "フロントエンドもできるプロダクトデザイナーです。このサイトも突貫工事ですが自作です。",
   avatar: {
     url: "/myicon.jpeg", // あなたのアバター画像のパス
     height: 100,
